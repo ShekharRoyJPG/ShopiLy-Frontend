@@ -1,8 +1,16 @@
 // import React from "react";
 
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import CartModal from "../pages/shop/CartModal";
 
 function Navbar() {
+  const products = useSelector((state) => state.cart.products);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const handleCartToggle = () => {
+    setIsCartOpen(!isCartOpen);
+  };
   return (
     <header className="fixed-nav-bar w-nav">
       <nav className="max-w-screen-2xl mx-auto px-4 flex justify-between items-center">
@@ -32,10 +40,10 @@ function Navbar() {
             </Link>
           </span>
           <span>
-            <button className="hover:text-primary">
+            <button onClick={handleCartToggle} className="hover:text-primary">
               <i className="ri-shopping-bag-line"></i>
               <sup className="text-sm inline-block px-1.5 text-white rounded-full bg-primary text-center">
-                0
+                {products.length}
               </sup>
             </button>
           </span>
@@ -46,6 +54,9 @@ function Navbar() {
           </span>
         </div>
       </nav>
+      {
+        isCartOpen && <CartModal products={products} isOpen={isCartOpen} onClose={handleCartToggle} />
+      }
     </header>
   );
 }
