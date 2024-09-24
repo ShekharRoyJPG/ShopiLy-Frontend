@@ -1,7 +1,21 @@
 import React from "react";
 import OrderSummary from "./OrderSummary";
+import { useDispatch } from "react-redux";
+import {
+  removeFromCart,
+  updateQuantity,
+} from "../../redux/feature/cart/cartSlice";
 
 const CartModal = ({ products, isOpen, onClose }) => {
+  const dispatch = useDispatch();
+  const handleQuantity = (type, id) => {
+    const payload = { type, id };
+    dispatch(updateQuantity(payload));
+  };
+  const handleRemoveFromCart = (e, id) => {
+    e.preventDefault();
+    dispatch(removeFromCart({ id }));
+  };
   return (
     <div
       className={`fixed z-[1000] inset-0 bg-black bg-opacity-80 transition-opacity ${
@@ -53,17 +67,26 @@ const CartModal = ({ products, isOpen, onClose }) => {
                       </p>
                     </div>
                     <div className="flex flex-row md:justify-start justify-end items-center mt-2">
-                      <button className="size-6 flex items-center justify-center px-1.5 rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white ml-8">
+                      <button
+                        onClick={() => handleQuantity("decrement", item.id)}
+                        className="size-6 flex items-center justify-center px-1.5 rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white ml-8"
+                      >
                         -
                       </button>
                       <span className="px-2 text-center mx-1">
                         {item.quantity}
                       </span>
-                      <button className="size-6 flex items-center justify-center px-1.5 rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white">
+                      <button
+                        onClick={() => handleQuantity("increment", item.id)}
+                        className="size-6 flex items-center justify-center px-1.5 rounded-full bg-gray-200 text-gray-700 hover:bg-primary hover:text-white"
+                      >
                         +
                       </button>
                       <div className="ml-5">
-                        <button className="text-red-500 hover:text-red-800 mr-4">
+                        <button
+                          onClick={(e) => handleRemoveFromCart(e, item.id)}
+                          className="text-red-500 hover:text-red-800 mr-4"
+                        >
                           remove
                         </button>
                       </div>
@@ -74,12 +97,7 @@ const CartModal = ({ products, isOpen, onClose }) => {
             )}
           </div>
           {/* calculation */}
-          {
-            products.length > 0 && (
-              <OrderSummary />
-            )
-          }
-
+          {products.length > 0 && <OrderSummary />}
         </div>
       </div>
     </div>

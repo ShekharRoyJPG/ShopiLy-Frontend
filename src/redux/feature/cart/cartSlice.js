@@ -26,6 +26,39 @@ const cartSlice = createSlice({
       state.tax = setTax(state);
       state.grandTotal = setGrandTotal(state);
     },
+    updateQuantity: (state, action) => {
+      const products = state.products.map((product) => {
+        if (product.id === action.payload.id) {
+          if (action.payload.type === "increment") {
+            product.quantity += 1;
+          } else if (action.payload.type === "decrement") {
+            if (product.quantity > 1) {
+              product.quantity -= 1;
+            }
+          }
+        }
+        return product;
+      });
+      state.selectedItems = setSelectedItems(state);
+      state.totalPrice = setTotalPrice(state);
+      state.tax = setTax(state);
+      state.grandTotal = setGrandTotal(state);
+    },
+    removeFromCart: (state, action) => {
+      state.products = state.products.filter((p) => p.id !== action.payload.id);
+      state.selectedItems = setSelectedItems(state);
+      state.totalPrice = setTotalPrice(state);
+      state.tax = setTax(state);
+      state.grandTotal = setGrandTotal(state);
+    },
+    clearCart: (state) => {
+      state.products = [];
+      state.selectedItems = 0;
+      state.totalPrice = 0;
+      state.tax = 0;
+      state.taxRate = 0;
+      state.grandTotal = 0;
+    },
   },
 });
 
@@ -50,11 +83,10 @@ export const setGrandTotal = (state) => {
   return state.totalPrice + state.tax;
 };
 
-export const { addToCart } = cartSlice.actions;
+export const { addToCart, updateQuantity, removeFromCart, clearCart } =
+  cartSlice.actions;
 
 export default cartSlice.reducer;
-
-
 
 // import { createSlice } from "@reduxjs/toolkit";
 
@@ -133,4 +165,3 @@ export default cartSlice.reducer;
 
 // // Export the reducer so it can be included in the store
 // export default cartSlice.reducer;
-
