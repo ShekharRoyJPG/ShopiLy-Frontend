@@ -5,6 +5,8 @@ import CategoryPage from "../pages/category/CategoryPage";
 import SearchPage from "../pages/search/SearchPage";
 import ShopPage from "../pages/shop/ShopPage";
 import SingleProduct from "../pages/shop/productDetails/SingleProduct";
+import Login from "../pages/login/Login";
+import Register from "../pages/register/Register";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -18,6 +20,14 @@ const router = createBrowserRouter([
 
     ],
   },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  }
 ]);
 
 export default router;
