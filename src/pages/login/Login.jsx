@@ -1,17 +1,28 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../../redux/feature/auth/authApi";
 
 const Login = () => {
   const [message, setMessage] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const navigation = useNavigate();
+  const dispatch = useDispatch();
+  const [login, { isLoading: loginLoading }] = useLoginMutation();
   const handleLogin = async (e) => {
     e.preventDefault();
-    const date = {
+    const data = {
       email,
       password,
     };
-    console.log(date);
+    try {
+      const response = await login(data).unwrap();
+      console.log(response);
+      navigation("/");
+    } catch (error) {
+      setMessage("Please provide a valid email and password");
+    }
   };
   return (
     <section className="h-screen flex items-center justify-center">
@@ -26,7 +37,7 @@ const Login = () => {
             name="email"
             id="email"
             value={email}
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="Email Address"
             required
             className="w-full bg-gray-100 focus:outline-none px-5 py-3"
@@ -36,7 +47,7 @@ const Login = () => {
             name="password"
             id="password"
             value={password}
-            onChange={(e)=>setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
             required
             className="w-full bg-gray-100 focus:outline-none px-5 py-3"

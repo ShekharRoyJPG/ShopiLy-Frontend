@@ -1,19 +1,31 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useRegisterMutation } from "../../redux/feature/auth/authApi";
 
 const Register = () => {
   const [message, setMessage] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+
+  const navigation = useNavigate();
+  const [register, { isLoading }] = useRegisterMutation();
   const handleRegister = async (e) => {
     e.preventDefault();
-    const date = {
+    const data = {
       username,
       email,
       password,
     };
-    console.log(date);
+
+    try {
+      const response = await register(data).unwrap();
+      // console.log(response);
+      navigation("/login");
+      alert("Registration successfully");
+    } catch (error) {
+      setMessage("Registration failed");
+    }
   };
   return (
     <section className="h-screen flex items-center justify-center">
