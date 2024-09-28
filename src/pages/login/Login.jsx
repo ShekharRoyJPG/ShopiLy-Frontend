@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../redux/feature/auth/authApi";
+import { setUser } from "../../redux/feature/auth/authSlice";
 
 const Login = () => {
   const [message, setMessage] = React.useState("");
@@ -18,7 +19,8 @@ const Login = () => {
     };
     try {
       const response = await login(data).unwrap();
-      console.log(response);
+      const { token, user } = response;
+      dispatch(setUser(user));
       navigation("/");
     } catch (error) {
       setMessage("Please provide a valid email and password");
