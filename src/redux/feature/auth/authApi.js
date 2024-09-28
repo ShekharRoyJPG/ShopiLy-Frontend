@@ -6,9 +6,10 @@ const authApi = createApi({
     baseUrl: `${getBaseUrl()}/api/auth`,
     credentials: "include",
   }),
+  tagTypes: ["user"],
   endpoints: (builder) => ({
     // register endpoint
-    register: builder.mutation({
+    registerUser: builder.mutation({
       query: (newUser) => ({
         url: "/register",
         method: "POST",
@@ -16,7 +17,7 @@ const authApi = createApi({
       }),
     }),
     // login endpoint
-    login: builder.mutation({
+    loginUser: builder.mutation({
       query: (credentials) => ({
         url: "/login",
         method: "POST",
@@ -24,10 +25,10 @@ const authApi = createApi({
       }),
     }),
     // logout endpoint
-    logout: builder.mutation({
+    logoutUser: builder.mutation({
       query: () => ({
         url: "/logout",
-        method: "POST",
+        method: "GET",
       }),
     }),
     // get all user
@@ -71,9 +72,9 @@ const authApi = createApi({
 });
 
 export const {
-  useRegisterMutation,
-  useLoginMutation,
-  useLogoutMutation,
+  useRegisterUserMutation,
+  useLoginUserMutation,
+  useLogoutUserMutation,
   useGetUserQuery,
   useDeleteUserMutation,
   useUpdateUserRoleMutation,

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../../redux/feature/auth/authApi";
+import { useRegisterUserMutation } from "../../redux/feature/auth/authApi";
 
 const Register = () => {
   const [message, setMessage] = React.useState("");
@@ -9,7 +9,7 @@ const Register = () => {
   const [password, setPassword] = React.useState("");
 
   const navigation = useNavigate();
-  const [register, { isLoading }] = useRegisterMutation();
+  const [registerUser, { isLoading }] = useRegisterUserMutation();
   const handleRegister = async (e) => {
     e.preventDefault();
     const data = {
@@ -19,7 +19,7 @@ const Register = () => {
     };
 
     try {
-      const response = await register(data).unwrap();
+      const response = await registerUser(data).unwrap();
       // console.log(response);
       navigation("/login");
       alert("Registration successfully");
