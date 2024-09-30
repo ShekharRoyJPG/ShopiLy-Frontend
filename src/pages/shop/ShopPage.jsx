@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import product from "../../data/products.json";
 import ProductCards from "./ProductCards";
 import ShopFiltering from "./ShopFiltering";
+import { useFetchAllProductsQuery } from "../../redux/feature/products/productsApi";
 
 const filters = {
   categories: ["all", "accessories", "dress", "jewellery", "cosmetics"],
@@ -32,49 +33,67 @@ const filters = {
 };
 
 const ShopPage = () => {
-  const [products, setProducts] = useState(product);
+  // const [products, setProducts] = useState(product);
   const [filterState, setFilterState] = useState({
     categories: "all",
     colors: "all",
     priceRange: "",
   });
 
-  // filtering functions
-  const applyFilters = () => {
-    let filteredProducts = product;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productsPerPage] = useState(8);
+  const { category, color, priceRange } = filterState;
+  const [minPrice, maxPrice] = priceRange.split("-").map(Number);
 
-    // Filter by category
-    if (filterState.categories && filterState.categories !== "all") {
-      filteredProducts = filteredProducts.filter(
-        (product) => product.category === filterState.categories
-      );
-    }
+  const {
+    data: { products = [], totalPages, totalProducts } = {},
+    error,
+    isLoading,
+  } = useFetchAllProductsQuery({
+    category: category !== "all" ? category : "",
+    color: color !== "all" ? color : "",
+    minPrice: isNaN(minPrice) ? "" : minPrice,
+    maxPrice: isNaN(maxPrice) ? "" : maxPrice,
+    page: currentPage,
+    limit: productsPerPage,
+  });
 
-    // Filter by color
-    if (filterState.colors && filterState.colors !== "all") {
-      filteredProducts = filteredProducts.filter(
-        (product) => product.color === filterState.colors
-      );
-    }
+  // // filtering functions
+  // const applyFilters = () => {
+  //   let filteredProducts = product;
 
-    // Filter by price range
-    if (filterState.priceRange) {
-      const [minPrice, maxPrice] = filterState.priceRange
-        .split("-")
-        .map(Number);
-      filteredProducts = filteredProducts.filter(
-        (product) =>
-          product.price >= minPrice &&
-          product.price <= maxPrice
-      );
-    }
+  //   // Filter by category
+  //   if (filterState.categories && filterState.categories !== "all") {
+  //     filteredProducts = filteredProducts.filter(
+  //       (product) => product.category === filterState.categories
+  //     );
+  //   }
 
-    setProducts(filteredProducts);
-  };
+  //   // Filter by color
+  //   if (filterState.colors && filterState.colors !== "all") {
+  //     filteredProducts = filteredProducts.filter(
+  //       (product) => product.color === filterState.colors
+  //     );
+  //   }
 
-  useEffect(() => {
-    applyFilters();
-  }, [filterState]);
+  //   // Filter by price range
+  //   if (filterState.priceRange) {
+  //     const [minPrice, maxPrice] = filterState.priceRange
+  //       .split("-")
+  //       .map(Number);
+  //     filteredProducts = filteredProducts.filter(
+  //       (product) =>
+  //         product.price >= minPrice &&
+  //         product.price <= maxPrice
+  //     );
+  //   }
+
+  //   setProducts(filteredProducts);
+  // };
+
+  // useEffect(() => {
+  //   applyFilters();
+  // }, [filterState]);
 
   // Clear filters
   const clearFilters = () => {
@@ -84,6 +103,17 @@ const ShopPage = () => {
       priceRange: "",
     });
   };
+
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error Loading products</div>;
+  }
+
+  const startProduct = (currentPage - 1) * productsPerPage + 1;
+  const endProduct = startProduct + products.length -1;
 
   return (
     <>
@@ -108,9 +138,44 @@ const ShopPage = () => {
           {/* right side */}
           <div>
             <h3 className="text-xl font-medium mb-4">
-              Products Available: {products.length}
+              Showing {startProduct} to {endProduct} of {totalProducts} products
             </h3>
             <ProductCards products={products} />
+
+            {/* pagination controls */}
+            <div className="mt-6 flex justify-center">
+              <button
+              disabled = {currentPage === 1}
+                onClick={() => setCurrentPage(currentPage - 1)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+              >
+                Previous
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (page) => (
+                  <button
+                    key={page}
+                    className={`px-4 py-2 ${
+                      currentPage === page
+                        ? "bg-primary text-white"
+                        : "text-gray-700"
+                    } rounded-md ${
+                      currentPage === page ? "border-primary" : ""
+                    }`}
+                    onClick={() => setCurrentPage(page)}
+                  >
+                    {page}
+                  </button>
+                )
+              )}
+              <button
+              disabled = {currentPage === totalPages}
+                onClick={() => setCurrentPage(currentPage + 1)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </section>
