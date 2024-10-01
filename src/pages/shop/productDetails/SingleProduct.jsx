@@ -4,6 +4,7 @@ import RatingStars from "../../../components/RatingStars";
 import { useDispatch } from "react-redux";
 import { useFetchProductByIdQuery } from "../../../redux/feature/products/productsApi";
 import { addToCart } from "../../../redux/feature/cart/cartSlice";
+import ReviewCard from "../reviews/ReviewCard";
 
 const SingleProduct = () => {
   const { id } = useParams();
@@ -11,6 +12,7 @@ const SingleProduct = () => {
   const { data, error, isLoading } = useFetchProductByIdQuery(id);
   const singleProduct = data?.product || {};
   const productReview = data?.reviews || [];
+  console.log(productReview);
   const handleAddProductToCart = (product) => {
     dispatch(addToCart(product));
   };
@@ -72,6 +74,9 @@ const SingleProduct = () => {
       </section>
       {/* display review */}
       {/* TODO: Work with review when will have api */}
+      <section className="section__container mt-8">
+            <ReviewCard productReview={productReview} />
+      </section>
     </>
   );
 };
