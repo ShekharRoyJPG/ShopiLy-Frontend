@@ -33,67 +33,67 @@ const filters = {
 };
 
 const ShopPage = () => {
-  // const [products, setProducts] = useState(product);
+  const [products, setProducts] = useState(product);
   const [filterState, setFilterState] = useState({
     categories: "all",
     colors: "all",
     priceRange: "",
   });
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(8);
-  const { category, color, priceRange } = filterState;
-  const [minPrice, maxPrice] = priceRange.split("-").map(Number);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [productsPerPage] = useState(8);
+  // const { category, color, priceRange } = filterState;
+  // const [minPrice, maxPrice] = priceRange.split("-").map(Number);
 
-  const {
-    data: { products = [], totalPages, totalProducts } = {},
-    error,
-    isLoading,
-  } = useFetchAllProductsQuery({
-    category: category !== "all" ? category : "",
-    color: color !== "all" ? color : "",
-    minPrice: isNaN(minPrice) ? "" : minPrice,
-    maxPrice: isNaN(maxPrice) ? "" : maxPrice,
-    page: currentPage,
-    limit: productsPerPage,
-  });
+  // const {
+  //   data: { products = [], totalPages, totalProducts } = {},
+  //   error,
+  //   isLoading,
+  // } = useFetchAllProductsQuery({
+  //   category: category !== "all" ? category : "",
+  //   color: color !== "all" ? color : "",
+  //   minPrice: isNaN(minPrice) ? "" : minPrice,
+  //   maxPrice: isNaN(maxPrice) ? "" : maxPrice,
+  //   page: currentPage,
+  //   limit: productsPerPage,
+  // });
 
   // // filtering functions
-  // const applyFilters = () => {
-  //   let filteredProducts = product;
+  const applyFilters = () => {
+    let filteredProducts = product;
 
-  //   // Filter by category
-  //   if (filterState.categories && filterState.categories !== "all") {
-  //     filteredProducts = filteredProducts.filter(
-  //       (product) => product.category === filterState.categories
-  //     );
-  //   }
+    // Filter by category
+    if (filterState.categories && filterState.categories !== "all") {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.category === filterState.categories
+      );
+    }
 
-  //   // Filter by color
-  //   if (filterState.colors && filterState.colors !== "all") {
-  //     filteredProducts = filteredProducts.filter(
-  //       (product) => product.color === filterState.colors
-  //     );
-  //   }
+    // Filter by color
+    if (filterState.colors && filterState.colors !== "all") {
+      filteredProducts = filteredProducts.filter(
+        (product) => product.color === filterState.colors
+      );
+    }
 
-  //   // Filter by price range
-  //   if (filterState.priceRange) {
-  //     const [minPrice, maxPrice] = filterState.priceRange
-  //       .split("-")
-  //       .map(Number);
-  //     filteredProducts = filteredProducts.filter(
-  //       (product) =>
-  //         product.price >= minPrice &&
-  //         product.price <= maxPrice
-  //     );
-  //   }
+    // Filter by price range
+    if (filterState.priceRange) {
+      const [minPrice, maxPrice] = filterState.priceRange
+        .split("-")
+        .map(Number);
+      filteredProducts = filteredProducts.filter(
+        (product) =>
+          product.price >= minPrice &&
+          product.price <= maxPrice
+      );
+    }
 
-  //   setProducts(filteredProducts);
-  // };
+    setProducts(filteredProducts);
+  };
 
-  // useEffect(() => {
-  //   applyFilters();
-  // }, [filterState]);
+  useEffect(() => {
+    applyFilters();
+  }, [filterState]);
 
   // Clear filters
   const clearFilters = () => {
@@ -105,15 +105,15 @@ const ShopPage = () => {
   };
 
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
-    return <div>Error Loading products</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
+  // if (error) {
+  //   return <div>Error Loading products</div>;
+  // }
 
-  const startProduct = (currentPage - 1) * productsPerPage + 1;
-  const endProduct = startProduct + products.length -1;
+  // const startProduct = (currentPage - 1) * productsPerPage + 1;
+  // const endProduct = startProduct + products.length -1;
 
   return (
     <>
@@ -138,20 +138,20 @@ const ShopPage = () => {
           {/* right side */}
           <div>
             <h3 className="text-xl font-medium mb-4">
-              Showing {startProduct} to {endProduct} of {totalProducts} products
+              {/* Showing {startProduct} to {endProduct} of {totalProducts} products */}
             </h3>
             <ProductCards products={products} />
 
             {/* pagination controls */}
             <div className="mt-6 flex justify-center">
               <button
-              disabled = {currentPage === 1}
-                onClick={() => setCurrentPage(currentPage - 1)}
+              // disabled = {currentPage === 1}
+                // onClick={() => setCurrentPage(currentPage - 1)}
                 className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
               >
                 Previous
               </button>
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              {/* {Array.from({ length: totalPages }, (_, index) => index + 1).map(
                 (page) => (
                   <button
                     key={page}
@@ -167,10 +167,10 @@ const ShopPage = () => {
                     {page}
                   </button>
                 )
-              )}
+              )} */}
               <button
-              disabled = {currentPage === totalPages}
-                onClick={() => setCurrentPage(currentPage + 1)}
+              // disabled = {currentPage === totalPages}
+                // onClick={() => setCurrentPage(currentPage + 1)}
                 className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md mr-2"
               >
                 Next
