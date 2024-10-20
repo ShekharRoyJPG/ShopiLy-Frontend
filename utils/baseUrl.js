@@ -1,3 +1,3 @@
-export const getBaseUrl = () =>{
-    return "http://localhost:8000";
-}
+export const getBaseUrl = () => {
+  return "https://shopily-backend.onrender.com/";
+};
